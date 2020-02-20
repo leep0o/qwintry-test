@@ -39,10 +39,7 @@ export default {
   },
   data () {
     return {
-      show: 'list',
-      mounted () {
-        console.log('DocumentForm mounted.')
-      }
+      show: 'list'
     }
   }
 }
