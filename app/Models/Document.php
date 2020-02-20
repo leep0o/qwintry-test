@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Document extends Model
 {
@@ -16,12 +17,31 @@ class Document extends Model
     ];
 
     /**
+     * The accessors to append to the model's array form.
+     *
+     * @var array
+     */
+    protected $appends = [
+        'has_file',
+    ];
+
+    /**
      * Relation with model: File
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     * @return HasOne
      */
-    public function file()
+    public function file(): HasOne
     {
         return $this->hasOne(File::class);
+    }
+
+    /**
+     * Document Has File
+     *
+     * @return bool
+     */
+    public function getHasFileAttribute(): bool
+    {
+        return $this->file->count() > 0;
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class File extends Model
 {
@@ -18,9 +19,9 @@ class File extends Model
     /**
      * Relation with model: Document
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
-    public function document()
+    public function document(): BelongsTo
     {
         return $this->belongsTo(Document::class);
     }
