@@ -28,7 +28,7 @@ class DocumentService
     public function list()
     {
         return $this->document
-            ->select('name', 'desc')
+            ->select('id', 'name', 'desc', 'created_at')
             ->get();
     }
 
