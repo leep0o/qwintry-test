@@ -2,11 +2,11 @@
 
 namespace App\Http\Services;
 
-use App\Exceptions\DocumentNotFoundException;
 use App\Models\File;
 use App\Models\Document;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Eloquent\Collection;
+use App\Exceptions\DocumentNotFoundException;
 
 class DocumentService
 {
@@ -98,8 +98,6 @@ class DocumentService
     public function destroy(int $id): bool
     {
         $document = $this->document->findOrFail($id);
-
-        // Storage file delete to model observer
 
         return $document->delete();
     }
