@@ -36,6 +36,7 @@
         <b-form-textarea
           id="textarea-description"
           v-model="document.desc"
+          required
           placeholder="Enter your description"
         />
       </b-form-group>
@@ -95,8 +96,8 @@ export default {
     this.document = null
   },
   methods: {
-    getDocument () {
-      axios.get('/v1/documents/' + this.documentId)
+    async getDocument () {
+      await axios.get('/v1/documents/' + this.documentId)
         .then((response) => {
           this.document = response.data
         })
@@ -105,7 +106,7 @@ export default {
           // alert('Failed to load document')
         })
     },
-    onSubmit () {
+    async onSubmit () {
       let formData = new FormData()
 
       if (this.document.id) {
@@ -119,7 +120,7 @@ export default {
         formData.append('image', this.file)
       }
 
-      axios.post('/v1/documents/', formData)
+      await axios.post('/v1/documents/', formData)
         .then((response) => {
           if (response.data.id) {
             this.$emit('store-document')

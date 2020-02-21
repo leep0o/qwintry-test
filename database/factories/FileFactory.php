@@ -9,7 +9,7 @@ use Faker\Generator as Faker;
 $factory->define(File::class, function (Faker $faker) {
     return [
         'filename' => Str::random(12) . '.jpg',
-        'path' => '/images/',
+        'path' => '/images',
         'size' => $faker->numberBetween(1024 * 1024, 5 * 1024 * 1024),
     ];
 });

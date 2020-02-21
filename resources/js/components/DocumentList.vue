@@ -2,7 +2,7 @@
   <div class="card-body">
     <table
       v-if="documents"
-      class="table table-bordered table-striped"
+      class="table table-bordered table-striped table-responsive"
     >
       <thead>
         <tr>
@@ -67,8 +67,8 @@ export default {
     this.getDocuments()
   },
   methods: {
-    getDocuments () {
-      axios.get('/v1/documents')
+    async getDocuments () {
+      await axios.get('/v1/documents')
         .then((response) => {
           this.documents = response.data
         })
@@ -76,9 +76,9 @@ export default {
           alert('Failed to load documents')
         })
     },
-    deleteDocument (id, index) {
+    async deleteDocument (id, index) {
       if (confirm('Are you sure you want to delete the document?')) {
-        axios.delete('/v1/documents/' + id)
+        await axios.delete('/v1/documents/' + id)
           .then((response) => {
             if (response.data) {
               this.documents.splice(index, 1)
