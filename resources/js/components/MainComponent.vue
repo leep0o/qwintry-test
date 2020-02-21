@@ -7,7 +7,7 @@
         size="sm"
         variant="success"
         class="float-right"
-        @click="show = 'form'"
+        @click="createDocument"
       >
         Create document
       </b-btn>
@@ -22,8 +22,15 @@
       </b-btn>
     </div>
     <transition name="fade">
-      <document-list v-if="show === 'list'" />
-      <document-form v-if="show === 'form'" />
+      <document-list
+        v-if="show === 'list'"
+        @edit-document="editDocument"
+      />
+      <document-form
+        v-if="show === 'form'"
+        :document-id="id"
+        @store-document="show = 'list'"
+      />
     </transition>
   </div>
 </template>
@@ -39,7 +46,18 @@ export default {
   },
   data () {
     return {
-      show: 'list'
+      show: 'list',
+      id: null
+    }
+  },
+  methods: {
+    createDocument () {
+      this.id = null
+      this.show = 'form'
+    },
+    editDocument (payload) {
+      this.id = payload.documentId
+      this.show = 'form'
     }
   }
 }

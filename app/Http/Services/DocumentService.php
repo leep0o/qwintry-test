@@ -2,7 +2,11 @@
 
 namespace App\Http\Services;
 
+use App\Exceptions\DocumentNotFoundException;
+use App\Models\File;
 use App\Models\Document;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Database\Eloquent\Collection;
 
 class DocumentService
 {
@@ -12,20 +16,26 @@ class DocumentService
     private $document;
 
     /**
+     * @var File
+     */
+    private $file;
+
+    /**
      * DocumentService constructor.
      * @param Document $document
      */
-    public function __construct(Document $document)
+    public function __construct(Document $document, File $file)
     {
         $this->document = $document;
+        $this->file = $file;
     }
 
     /**
      * Documents
      *
-     * @return Document
+     * @return Collection
      */
-    public function list()
+    public function list(): Collection
     {
         return $this->document
             ->select('id', 'name', 'desc', 'created_at')
@@ -34,29 +44,45 @@ class DocumentService
 
     /**
      * Get document
+     *
+     * @param int $id
+     * @return Document
+     * @throws DocumentNotFoundException
      */
-    public function show(int $id)
+    public function show(int $id): Document
     {
-        return $this->document
+        $document = $this->document
+            ->select('id', 'name', 'desc', 'created_at')
             ->with('file')
-            ->findOrFail($id);
+            ->find($id);
+
+        if (!$document) {
+            throw new DocumentNotFoundException('Document not found, id:  ' . $id);
+        }
+
+        return $document;
     }
 
     /**
-     * Delete document
+     * Store document
+     *
+     * @param array $data
+     * @return Document
      */
-    public function store(array $data)
+    public function store(array $data): Document
     {
-        if ($data['id']) {
+        if (isset($data['id']) && $data['id']) {
             $document = $this->document->findOrFail($data['id']);
             $document->update($data);
         } else {
             $document = $this->document->create($data);
         }
 
-        if ($data['file']) {
-            $file = '';
-            $document->file()->save($file);
+        if (isset($data['image'])) {
+            $storedFile = $this->storeFile($data['image'], $document);
+            $newFile = $this->file->create($storedFile);
+
+            $document->file()->save($newFile);
             $document->save();
         }
 
@@ -67,14 +93,40 @@ class DocumentService
      * Delete document
      *
      * @param int $id
-     * @return mixed
+     * @return bool
      */
-    public function destroy(int $id)
+    public function destroy(int $id): bool
     {
         $document = $this->document->findOrFail($id);
 
         // Storage file delete to model observer
 
         return $document->delete();
+    }
+
+    /**
+     * Store file
+     *
+     * @param $file
+     * @param $document
+     * @return array
+     */
+    public function storeFile($file, $document): array
+    {
+        if ($document->has_file && Storage::disk('public')->exists($document->file->full_path)) {
+            Storage::disk('public')->delete($document->file->full_path);
+        }
+
+        $size = filesize($file);
+        $path = '/images/documents';
+        $name = time() . '.' . $file->getClientOriginalExtension();
+
+        Storage::disk('public')->putFileAs($path, $file, $name);
+
+        return [
+            'filename' => $name,
+            'path' => $path,
+            'size' => $size,
+        ];
     }
 }

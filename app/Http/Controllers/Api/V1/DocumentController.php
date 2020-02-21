@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
 use App\Http\Services\DocumentService;
 use App\Http\Requests\DocumentStoreRequest;
@@ -25,51 +26,44 @@ class DocumentController extends Controller
     /**
      * Documents
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function index()
+    public function index(): JsonResponse
     {
-        $documents = $this->documentService->list();
-
-        return response()->json($documents);
+        return response()->json($this->documentService->list());
     }
 
     /**
      * Get document
      *
      * @param int $id
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
+     * @throws \App\Exceptions\DocumentNotFoundException
      */
-    public function show(int $id)
+    public function show(int $id): JsonResponse
     {
-        $documents = $this->documentService->show($id);
-
-        return response()->json($documents);
+        return response()->json($this->documentService->show($id));
     }
 
     /**
      * Delete document
      *
      * @param DocumentStoreRequest $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function store(DocumentStoreRequest $request)
+    public function store(DocumentStoreRequest $request): JsonResponse
     {
-        $documents = $this->documentService->store($request->all());
-
-        return response()->json($documents);
+        return response()->json($this->documentService->store($request->all()));
     }
 
     /**
      * Delete document
      *
      * @param int $id
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function destroy(int $id)
+    public function destroy(int $id): JsonResponse
     {
-        $documents = $this->documentService->destroy($id);
-
-        return response()->json($documents);
+        return response()->json($this->documentService->destroy($id));
     }
 }

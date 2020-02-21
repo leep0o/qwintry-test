@@ -36,12 +36,12 @@ class Document extends Model
     }
 
     /**
-     * Document Has File
+     * Accessor 'has_file'
      *
      * @return bool
      */
     public function getHasFileAttribute(): bool
     {
-        return $this->file->count() > 0;
+        return $this->file && ($this->file->count() > 0);
     }
 }

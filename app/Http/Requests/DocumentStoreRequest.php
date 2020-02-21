@@ -24,7 +24,10 @@ class DocumentStoreRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'id' => 'nullable|integer',
+            'name' => 'required|string|max:128',
+            'desc' => 'required|string|max:1024',
+            'image' => 'nullable|image|max:' . 1024 * 1024 * 5,
         ];
     }
 }

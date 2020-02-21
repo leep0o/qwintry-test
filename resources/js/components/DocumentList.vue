@@ -6,37 +6,36 @@
     >
       <thead>
         <tr>
+          <th>ID</th>
           <th>Name</th>
           <th>Desc</th>
           <th>Created</th>
           <th>File</th>
-          <th width="100">
-            Actions
-          </th>
+          <th>Actions</th>
         </tr>
       </thead>
       <tbody>
         <tr
-          v-for="document in documents"
-          :key="document.id"
+          v-for="(document, index) in documents"
+          :key="index"
         >
+          <td>{{ document.id }}</td>
           <td>{{ document.name }}</td>
           <td>{{ document.desc }}</td>
           <td>{{ document.created_at }}</td>
-          <td>{{ document.has_file ? 'Yes' : 'No' }}</td>
-
+          <td>{{ document.has_file ? '+' : '-' }}</td>
           <td>
             <b-btn
               size="sm"
               variant="warning"
-              @click="editDocument(document.id)"
+              @click="$emit('edit-document', { documentId: document.id })"
             >
               Edit
             </b-btn>
             <b-btn
               size="sm"
               variant="danger"
-              @click="deleteDocument(document.id)"
+              @click="deleteDocument(document.id, index)"
             >
               Delete
             </b-btn>
@@ -73,24 +72,22 @@ export default {
         .then((response) => {
           this.documents = response.data
         })
-        .catch((response) => {
-          console.log(response)
-          alert('Не удалось загрузить')
+        .catch(() => {
+          alert('Failed to load documents')
         })
     },
-    editDocument (id) {
-      console.log('editDocument', id)
-      // this.$store.dispatch('user/sendMessage', {
-      //     to: this.pet.owner.id,
-      //     message: this.message
-      // }).then(() => {
-      //     // this.$root.$emit('bv::hide::modal', 'modal-send-message')
-      //
-      //     // this.message = ''
-      // })
-    },
-    deleteDocument (id) {
-      console.log('deleteDocument', id)
+    deleteDocument (id, index) {
+      if (confirm('Are you sure you want to delete the document?')) {
+        axios.delete('/v1/documents/' + id)
+          .then((response) => {
+            if (response.data) {
+              this.documents.splice(index, 1)
+            }
+          })
+          .catch(() => {
+            alert('Sorry! Failed to delete document.')
+          })
+      }
     }
   }
 }
