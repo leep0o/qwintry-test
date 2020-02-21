@@ -1,2 +1,7 @@
 ## Documents app.
-##### qwintry-test
+#### Start app
+
+```
+- Fill the db data in .env
+- make start
+```
