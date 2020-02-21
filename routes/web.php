@@ -15,12 +15,12 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Auth::routes();
-Route::get('/home', 'HomeController@index')->name('home');
-
 // Documents
 Route::group(['prefix' => '/v1', 'namespace' => 'Api\V1'], function () {
     Route::resource('documents', 'DocumentController')->only([
         'index', 'show', 'store', 'destroy'
     ]);
 });
+
+Auth::routes();
+Route::get('/home', 'HomeController@index')->name('home');

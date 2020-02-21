@@ -101,9 +101,8 @@ export default {
         .then((response) => {
           this.document = response.data
         })
-        .catch((response) => {
-          console.log(response)
-          // alert('Failed to load document')
+        .catch(() => {
+          alert('Failed to load document')
         })
     },
     onSubmit () {
@@ -120,15 +119,13 @@ export default {
         formData.append('image', this.file)
       }
 
-      axios.post('/v1/documents/', formData)
+      axios.post('/v1/documents', formData)
         .then((response) => {
           if (response.data.id) {
             this.$emit('store-document')
           }
         })
         .catch((errors) => {
-          console.log(errors.response.data.errors)
-
           for (let key in errors.response.data.errors) {
             errors.response.data.errors[key].map(msg => {
               this.errors.push(msg)
