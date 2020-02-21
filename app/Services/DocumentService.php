@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Http\Services;
+namespace App\Services;
 
 use App\Models\File;
 use App\Models\Document;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Eloquent\Collection;
 use App\Exceptions\DocumentNotFoundException;
@@ -68,15 +69,20 @@ class DocumentService
      *
      * @param array $data
      * @return Document
+     * @throws \Exception
      */
     public function store(array $data): Document
     {
+        DB::beginTransaction();
+
         if (isset($data['id']) && $data['id']) {
             $document = $this->document->findOrFail($data['id']);
             $document->update($data);
         } else {
             $document = $this->document->create($data);
         }
+
+        DB::commit();
 
         if (isset($data['image'])) {
             $storedFile = $this->storeFile($data['image'], $document);
