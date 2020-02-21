@@ -50,6 +50,7 @@ class DocumentController extends Controller
      *
      * @param DocumentStoreRequest $request
      * @return JsonResponse
+     * @throws \Exception
      */
     public function store(DocumentStoreRequest $request): JsonResponse
     {

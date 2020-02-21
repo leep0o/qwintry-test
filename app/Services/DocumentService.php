@@ -122,7 +122,7 @@ class DocumentService
         }
 
         $size = filesize($file);
-        $path = '/images/documents';
+        $path = 'images/documents';
         $name = time() . '.' . $file->getClientOriginalExtension();
 
         Storage::disk('public')->putFileAs($path, $file, $name);
