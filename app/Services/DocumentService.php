@@ -71,7 +71,7 @@ class DocumentService
      * @return Document
      * @throws \Exception
      */
-    public function store(array $data): Document
+    public function store(array $data)
     {
 //        DB::beginTransaction();
 

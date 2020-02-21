@@ -106,7 +106,7 @@ export default {
           // alert('Failed to load document')
         })
     },
-    async onSubmit () {
+    onSubmit () {
       let formData = new FormData()
 
       if (this.document.id) {
@@ -120,7 +120,7 @@ export default {
         formData.append('image', this.file)
       }
 
-      await axios.post('/v1/documents/', formData)
+      axios.post('/v1/documents/', formData)
         .then((response) => {
           if (response.data.id) {
             this.$emit('store-document')

@@ -47,11 +47,8 @@ class DocumentController extends Controller
 
     /**
      * Delete document
-     *
-     * @param DocumentStoreRequest $request
-     * @return JsonResponse
      */
-    public function store(DocumentStoreRequest $request): JsonResponse
+    public function store(DocumentStoreRequest $request)
     {
         return response()->json($this->documentService->store($request->all()));
     }
