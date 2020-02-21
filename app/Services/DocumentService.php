@@ -73,7 +73,7 @@ class DocumentService
      */
     public function store(array $data): Document
     {
-        DB::beginTransaction();
+//        DB::beginTransaction();
 
         if (isset($data['id']) && $data['id']) {
             $document = $this->document->findOrFail($data['id']);
@@ -82,7 +82,7 @@ class DocumentService
             $document = $this->document->create($data);
         }
 
-        DB::commit();
+//        DB::commit();
 
         if (isset($data['image'])) {
             $storedFile = $this->storeFile($data['image'], $document);
